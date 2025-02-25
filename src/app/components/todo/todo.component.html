@@ -7,19 +7,27 @@
     />
   </label>
 
-  <form *ngIf="editing; else todoTitleBlock">
+  <form *ngIf="editing; else todoTitleBlock" (ngSubmit)="save()">
     <input
+      #titleField
       type="text"
       class="todo__title-field"
       placeholder="Empty todo will be deleted"
-      value="To do is being edited now"
+      name="title"
+      [(ngModel)]="title"
+      (keyup.escape)="editing = false"
+      (blur)="save()"
     />
   </form>
 
   <ng-template #todoTitleBlock>
-    <span class="todo__title">{{todo.title}}</span>
+    <span class="todo__title" (dblclick)="edit()">
+      {{todo.title}}
+    </span>
+
     <button
       class="todo__remove"
+      (click)="delete.emit()"
     >
       ×
     </button>

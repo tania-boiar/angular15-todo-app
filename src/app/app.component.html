@@ -24,6 +24,7 @@
       <app-todo
         *ngFor="let todo of todos; let i = index"
         [todo]="todo"
+        (delete)="todos.splice(i, 1)"
       ></app-todo>
     </section>
 
