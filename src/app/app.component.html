@@ -8,23 +8,16 @@
         class="todoapp__toggle-all active"
       ></button>
 
-      <form (ngSubmit)="addTodo()" [formGroup]="todoForm">
-        <input
-          type="text"
-          class="todoapp__new-todo"
-          placeholder="What needs to be done?"
-          name="title"
-          [style.backgroundColor] = "title.errors && title.dirty ? '#f88' : ''"
-          formControlName="title"
-        />
-      </form>
+      <app-todo-form (save)="addTodo($event)"></app-todo-form>
     </header>
 
     <section class="todoapp__main">
       <app-todo
-        *ngFor="let todo of todos; let i = index"
+        *ngFor="let todo of todos; let i = index; trackBy: trackById"
         [todo]="todo"
-        (delete)="todos.splice(i, 1)"
+        (delete)="deleteTodo(todo.id)"
+        (rename)="renameTodo(todo.id, $event)"
+        (toggle)="toggleTodo(todo.id)"
       ></app-todo>
     </section>
 

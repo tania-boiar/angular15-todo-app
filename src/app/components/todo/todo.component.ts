@@ -1,13 +1,16 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Todo } from 'src/app/types/todo';
 
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.scss']
+  styleUrls: ['./todo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoComponent {
-  @Output() delete = new EventEmitter;
+  @Output() delete = new EventEmitter();
+  @Output() toggle = new EventEmitter();
+  @Output() rename = new EventEmitter<string>();
   @Input() todo!: Todo;
 
   @ViewChild('titleField')
@@ -31,6 +34,6 @@ export class TodoComponent {
     }
 
     this.editing = false;
-    this.todo.title = this.title;
+    this.rename.emit(this.title);
   }
 }

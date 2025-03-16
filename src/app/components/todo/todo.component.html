@@ -3,7 +3,8 @@
     <input
       type="checkbox"
       class="todo__status"
-      [(ngModel)]="todo.completed"
+      [checked]="todo.completed"
+      (change)="toggle.emit()"
     />
   </label>
 
@@ -22,7 +23,7 @@
 
   <ng-template #todoTitleBlock>
     <span class="todo__title" (dblclick)="edit()">
-      {{todo.title}}
+      {{ todo.title | lowercase }}
     </span>
 
     <button
