@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Todo } from './types/todo';
 
-const todos = [
+const todosFromServer = [
   { id: 1, title: 'Body keeps the score', completed: true},
   { id: 2, title: 'Foundation', completed: true},
   { id: 3, title: 'Klara and the Sun', completed: true},
@@ -17,40 +16,66 @@ const todos = [
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
-  todos = todos;
-  todoForm = new FormGroup({
-    title: new FormControl('', {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(2),
-      ],
-    }),
-  });
- 
-  get title() {
-    return this.todoForm.get('title') as FormControl;
+export class AppComponent implements OnInit {
+  _todos: Todo[] = [];
+  activeTodos: Todo[] = [];
+
+  get todos() {
+    return this._todos;
   }
 
-  get activeTodos() {
-    return this.todos.filter(todo => !todo.completed)
-  }
-
-  addTodo() {
-    if(this.todoForm.invalid) {
+  set todos(todos: Todo[]) {
+    if (todos === this._todos) {
       return;
     }
 
+    this._todos = todos;
+    this.activeTodos = this._todos.filter(todo => !todo.completed);
+  }
+
+  constructor() {}
+
+  ngOnInit(): void {
+    this.todos = todosFromServer;
+  }
+
+  trackById(i: number, todo: Todo) {}
+
+  addTodo(newTitle: string) {
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title.value,
+      title: newTitle,
       completed: false,
     }
 
-    this.todos.push(newTodo);
-    this.todoForm.reset();
+    this.todos = [...this.todos, newTodo];
+  }
+
+  toggleTodo(todoId: number) {
+    this.todos = this.todos.map(todo => {
+      if (todo.id !== todoId) {
+        return todo;
+      }
+      return { ...todo, completed: !todo.completed }
+    })
+  }
+
+  renameTodo(todoId: number, newTitle: string) {
+    this.todos = this.todos.map(todo => {
+      if (todo.id !== todoId) {
+        return todo;
+      }
+      return {
+        ...todo,
+        title: newTitle
+      }
+    })
+  }
+
+  deleteTodo(todoId: number) {
+    this.todos = this.todos.filter(todo => todo.id !== todoId) 
   }
 }
