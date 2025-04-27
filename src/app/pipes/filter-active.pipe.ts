@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Todo } from '../types/todo';
 
 @Pipe({
-  name: 'filterActive'
+  name: 'filterActive',
+  pure: true,
 })
 export class FilterActivePipe implements PipeTransform {
 
