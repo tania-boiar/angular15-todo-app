@@ -15,9 +15,9 @@
       <app-todo
         *ngFor="let todo of todos; let i = index; trackBy: trackById"
         [todo]="todo"
-        (delete)="deleteTodo(todo.id)"
-        (rename)="renameTodo(todo.id, $event)"
-        (toggle)="toggleTodo(todo.id)"
+        (delete)="deleteTodo(todo)"
+        (rename)="renameTodo(todo, $event)"
+        (toggle)="toggleTodo(todo)"
       ></app-todo>
     </section>
 
